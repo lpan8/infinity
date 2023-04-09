@@ -88,7 +88,7 @@ clean:
 
 examples:
 	mkdir -p $(RELEASE_FOLDER)/$(EXAMPLES_FOLDER)
-	$(CC) src/examples/read-write-send.cpp $(CC_FLAGS) $(LD_FLAGS) -I $(RELEASE_FOLDER)/$(INCLUDE_FOLDER) -L $(RELEASE_FOLDER) -o $(RELEASE_FOLDER)/$(EXAMPLES_FOLDER)/read-write-send
-	$(CC) src/examples/send-performance.cpp $(CC_FLAGS) $(LD_FLAGS) -I $(RELEASE_FOLDER)/$(INCLUDE_FOLDER) -L $(RELEASE_FOLDER) -o $(RELEASE_FOLDER)/$(EXAMPLES_FOLDER)/send-performance
+	$(CC) src/examples/read-write-send.cpp $(CC_FLAGS) $(LD_FLAGS) -I $(RELEASE_FOLDER)/$(INCLUDE_FOLDER) -L $(RELEASE_FOLDER) -o read-write-send
+	$(CC) src/examples/send-performance.cpp $(CC_FLAGS) $(LD_FLAGS) -I $(RELEASE_FOLDER)/$(INCLUDE_FOLDER) -L $(RELEASE_FOLDER) -o send-performance
 
 ##################################################

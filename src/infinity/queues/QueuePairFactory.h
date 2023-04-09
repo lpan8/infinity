@@ -34,6 +34,8 @@ public:
 	 */
 	QueuePair * acceptIncomingConnection(void *userData = NULL, uint32_t userDataSizeInBytes = 0);
 
+    // QueuePair** acceptIncomingConnections(void *userData = NULL, uint32_t userDataSizeInBytes = 0, int numClients = 1);
+
 	/**
 	 * Connect to remote machine (active side)
 	 */

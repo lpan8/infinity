@@ -11,7 +11,10 @@
 #include <unistd.h>
 #include <string.h>
 #include <arpa/inet.h>
-#include  <sys/socket.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <netinet/in.h>
+#include <sys/types.h>
 
 #include <infinity/core/Configuration.h>
 #include <infinity/utils/Debug.h>
@@ -114,6 +117,101 @@ QueuePair * QueuePairFactory::acceptIncomingConnection(void *userData, uint32_t 
 	return queuePair;
 
 }
+
+// QueuePair ** QueuePairFactory::acceptIncomingConnections(void *userData, uint32_t userDataSizeInBytes, int numClients) {
+
+// 	INFINITY_ASSERT(userDataSizeInBytes < infinity::core::Configuration::MAX_CONNECTION_USER_DATA_SIZE,
+// 			"[INFINITY][QUEUES][FACTORY] User data size is too large.\n")
+//     QueuePair* clientSockets[numClients];
+    // int clientSds[numClients];
+    // int maxSd;
+    // int sd;
+    // int activity;
+    // //set of socket descriptors 
+    // fd_set readfds; 
+    // //initialise all client_socket[] to 0 so not checked 
+    // for (int i = 0; i < numClients; i++)  
+    // {  
+    //     clientSds[i] = 0;  
+    // }  
+
+    // while(true) {
+    //     //clear the socket set 
+    //     FD_ZERO(&readfds);  
+     
+    //     //add master socket to set 
+    //     FD_SET(this->serverSocket, &readfds);  
+    //     maxSd = this->serverSocket; 
+
+    //     //add child sockets to set 
+    //     for (int i = 0 ; i < numClients ; i++)  
+    //     {  
+    //         //socket descriptor 
+    //         sd = clientSds[i];  
+                 
+    //         //if valid socket descriptor then add to read list 
+    //         if(sd > 0)  
+    //             FD_SET( sd , &readfds);  
+                 
+    //         //highest file descriptor number, need it for the select function 
+    //         if(sd > maxSd)  
+    //             maxSd = sd;  
+    //     } 
+
+    //     //wait for an activity on one of the sockets , timeout is NULL , 
+    //     //so wait indefinitely 
+    //     activity = select( maxSd + 1 , &readfds , NULL , NULL , NULL);  
+
+    //     if ((activity < 0) && (errno!=EINTR))  
+    //     {  
+    //         printf("select error");  
+    //     }  
+
+    //     if (FD_ISSET(this->serverSocket, &readfds)) {
+//             serializedQueuePair *receiveBuffer = (serializedQueuePair*) calloc(1, sizeof(serializedQueuePair));
+//             serializedQueuePair *sendBuffer = (serializedQueuePair*) calloc(1, sizeof(serializedQueuePair));
+
+//             int connectionSocket = accept(this->serverSocket, (sockaddr *) NULL, NULL);
+//             INFINITY_ASSERT(connectionSocket >= 0, "[INFINITY][QUEUES][FACTORY] Cannot open connection socket.\n");
+//                     int32_t returnValue = recv(connectionSocket, receiveBuffer, sizeof(serializedQueuePair), 0);
+//             INFINITY_ASSERT(returnValue == sizeof(serializedQueuePair), "[INFINITY][QUEUES][FACTORY] Incorrect number of bytes received. Expected %lu. Received %d.\n",
+//                     sizeof(serializedQueuePair), returnValue);
+
+//             QueuePair *queuePair = new QueuePair(this->context);
+
+//             sendBuffer->localDeviceId = queuePair->getLocalDeviceId();
+//             sendBuffer->queuePairNumber = queuePair->getQueuePairNumber();
+//             sendBuffer->sequenceNumber = queuePair->getSequenceNumber();
+//             sendBuffer->userDataSize = userDataSizeInBytes;
+//             memcpy(sendBuffer->userData, userData, userDataSizeInBytes);
+
+//             returnValue = send(connectionSocket, sendBuffer, sizeof(serializedQueuePair), 0);
+//             INFINITY_ASSERT(returnValue == sizeof(serializedQueuePair),
+//                     "[INFINITY][QUEUES][FACTORY] Incorrect number of bytes transmitted. Expected %lu. Received %d.\n", sizeof(serializedQueuePair), returnValue);
+
+//             INFINITY_DEBUG("[INFINITY][QUEUES][FACTORY] Pairing (%u, %u, %u, %u)-(%u, %u, %u, %u)\n", queuePair->getLocalDeviceId(), queuePair->getQueuePairNumber(),
+//                     queuePair->getSequenceNumber(), userDataSizeInBytes, receiveBuffer->localDeviceId, receiveBuffer->queuePairNumber, receiveBuffer->sequenceNumber,
+//                     receiveBuffer->userDataSize);
+
+//             queuePair->activate(receiveBuffer->localDeviceId, receiveBuffer->queuePairNumber, receiveBuffer->sequenceNumber);
+//             queuePair->setRemoteUserData(receiveBuffer->userData, receiveBuffer->userDataSize);
+
+//             this->context->registerQueuePair(queuePair);
+
+//             close(connectionSocket);
+//             free(receiveBuffer);
+//             free(sendBuffer);
+
+//         }
+
+        
+
+//     }
+
+
+// 	return clientSockets;
+
+// }
 
 QueuePair * QueuePairFactory::connectToRemoteHost(const char* hostAddress, uint16_t port, void *userData, uint32_t userDataSizeInBytes) {
 
