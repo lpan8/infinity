@@ -21,6 +21,13 @@
 #define PORT_NUMBER 8013
 #define SERVER_IP "10.0.2.1"
 
+struct requestData {
+    int key;
+    int clientId;
+};
+
+
+
 // Usage: ./progam -s {numClients} for server and ./program {clientId} for client component
 int main(int argc, char **argv) {
 
@@ -62,8 +69,8 @@ int main(int argc, char **argv) {
 
             printf("Message received\n");
    
-            sleep(1);
-            printf("Message: %s\n", (char*)bufferToReadWrite->getData());
+            // sleep(1);
+            // printf("Message: %s\n", (char*)bufferToReadWrite->getData());
             
         }
         delete bufferToReadWrite;
@@ -75,30 +82,49 @@ int main(int argc, char **argv) {
 		infinity::memory::RegionToken *remoteBufferToken = (infinity::memory::RegionToken *) qp->getUserData();
 		
         if (clientId == 0) {
-            printf("Creating buffers\n");
-            char data[] = "hello world";
-            infinity::memory::Buffer *buffer1Sided = new infinity::memory::Buffer(context, data, 128 * sizeof(char));
-            infinity::requests::RequestToken requestToken(context);
-            printf("Writing content to remote buffer\n");
-            qp->write(buffer1Sided, remoteBufferToken, &requestToken);
-            requestToken.waitUntilCompleted();
+            // printf("Creating buffers\n");
+            // char data[] = "hello world";
+            // infinity::memory::Buffer *buffer = new infinity::memory::Buffer(context, data, 128 * sizeof(char));
+            // infinity::requests::RequestToken requestToken(context);
+            // printf("Writing content to remote buffer\n");
+            // qp->write(buffer, remoteBufferToken, &requestToken);
+            // requestToken.waitUntilCompleted();
 
-            printf("Reading content from remote buffer\n");
+            // printf("Reading content from remote buffer\n");
             
-            qp->read(buffer1Sided, remoteBufferToken, &requestToken);
-            requestToken.waitUntilCompleted();
+            // qp->read(buffer, remoteBufferToken, &requestToken);
+            // requestToken.waitUntilCompleted();
 
-            printf("message: %s\n", (char*)(buffer1Sided->getData()));
+            // printf("message: %s\n", (char*)(buffer->getData()));
 
-            delete buffer1Sided;
+            for (int i = 0 ; i < 10; i++) {
+                requestData request;
+                request.key = i;
+                request.clientId = clientId;
+                infinity::memory::Buffer *buffer = new infinity::memory::Buffer(context, &request, sizeof(requestData));
+                infinity::requests::RequestToken requestToken(context);
+                qp->write(buffer, 0, remoteBufferToken, i * sizeof(requestData),  sizeof(requestData), infinity::queues::OperationFlags(), &requestToken);
+                requestToken.waitUntilCompleted();
+                delete buffer;
+            }
+
         } else {
-            infinity::memory::Buffer *buffer1Sided = new infinity::memory::Buffer(context, 128 * sizeof(char));
-            infinity::requests::RequestToken requestToken(context);
-            printf("Reading content from remote buffer\n");
-            qp->read(buffer1Sided, remoteBufferToken, &requestToken);
-            requestToken.waitUntilCompleted();
+            // infinity::memory::Buffer *buffer = new infinity::memory::Buffer(context, 128 * sizeof(char));
+            // infinity::requests::RequestToken requestToken(context);
+            // printf("Reading content from remote buffer\n");
+            // qp->read(buffer, remoteBufferToken, &requestToken);
+            // requestToken.waitUntilCompleted();
 
-            printf("message: %s\n", (char*)(buffer1Sided->getData()));
+            // printf("message: %s\n", (char*)(buffer->getData()));
+
+            infinity::memory::Buffer *buffer = new infinity::memory::Buffer(context, sizeof(requestData));
+            infinity::requests::RequestToken requestToken(context);
+            for (int i = 0 ; i < 10; i++) {
+                qp->read(buffer, 0, remoteBufferToken, i * sizeof(requestData),  sizeof(requestData), infinity::queues::OperationFlags(), &requestToken);
+                requestToken.waitUntilCompleted();
+                printf("message: %d\n", ((requestData*)(buffer->getData()))->key);
+            }
+            delete buffer;
         }
 		
 
